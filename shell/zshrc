@@ -93,8 +93,18 @@ export NVM_DIR="$HOME/.nvm"
 alias ll='ls -l'
 alias zshconfig="code ~/.zshrc"
 alias ohmyzsh="code ~/.oh-my-zsh"
+alias reload="source ~/.zshrc"
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+
+
+## For Git
+alias st='git status'
+alias logs='git log --oneline --graph --decorate --all'
 alias pull='git pull --rebase'
 alias push='git push --force-with-lease'
+
+
 
 alias ollama-claude="ollama launch claude --model  minimax-m3:cloud"
 
