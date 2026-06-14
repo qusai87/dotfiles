@@ -1,30 +1,31 @@
 # Path to your oh-my-zsh configuration.
 export ZSH="$HOME/.oh-my-zsh"
-ZSH_CUSTOM="$ZSH/custom"
+export ZSH_CUSTOM="$ZSH/custom"
+
+# Base PATH
+PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:$PATH"
 
 # Directories to be prepended to $PATH
-declare -a dirs_to_prepend
-dirs_to_prepend=(
+typeset -a dirs_to_prepend=(
   "/usr/bin"
   "/usr/local/sbin"
   "/usr/local/git/bin"
   "/usr/local/"
   "/usr/local/mysql/bin"
-  "/sw/bin/"
+  "/sw/bin"
   "$HOME/dotfiles/bin"
   "$HOME/bin"
   "$HOME/.rvm/bin"
-  "$(brew --prefix 2>/dev/null)/bin"
-  "$(brew --prefix 2>/dev/null)/libexec/gnubin" # Add brew-installed GNU core utilities bin
-  "$(brew --prefix 2>/dev/null)/share/npm/bin" # Add npm-installed package bin
 )
 
-# Explicitly configured $PATH
-PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+if command -v brew >/dev/null 2>&1; then
+  eval "$(brew shellenv)"
+  dirs_to_prepend+=( "$(brew --prefix)/libexec/gnubin" ) # Add brew-installed GNU core utilities bin
+  dirs_to_prepend+=( "$(brew --prefix)/share/npm/bin" )  # Add npm-installed package bins
+fi
 
-for dir in "${dirs_to_prepend[@]}"
-do
-  if [ -d "${dir}" ]; then
+for dir in "${dirs_to_prepend[@]}"; do
+  if [[ -d $dir ]]; then
     PATH="${dir}:$PATH"
   fi
 done
@@ -104,8 +105,14 @@ alias logs='git log --oneline --graph --decorate --all'
 alias pull='git pull --rebase'
 alias push='git push --force-with-lease'
 
-
-
 alias ollama-claude="ollama launch claude --model  minimax-m3:cloud"
 
-cd ~/Projects
+[[ -d "$HOME/Projects" ]] && cd "$HOME/Projects"
+
+[[ -f "$HOME/myenv/bin/activate" ]] && source "$HOME/myenv/bin/activate"
+
+if [[ -f "$HOME/.dircolors" ]]; then
+  eval "$(dircolors -b "$HOME/.dircolors")"
+fi
+
+
